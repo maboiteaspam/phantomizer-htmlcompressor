@@ -5,25 +5,27 @@ module.exports = function(grunt) {
 
     grunt.registerMultiTask("phantomizer-htmlcompressor", "Compress html file", function () {
 
-        var ph_libutil = require("phantomizer-libutil")
-        var os = require('os')
-        var htmlcompressor = require("../lib/htmlcompressor")
+        var ph_libutil = require("phantomizer-libutil");
+        var os = require('os');
+        var htmlcompressor = require("../lib/htmlcompressor");
 
-        var meta = ph_libutil.meta
-        var meta_manager = new meta( process.cwd() )
+        var meta_factory = ph_libutil.meta;
 
         var options = this.options();
         var in_file = options.in_file;
         var out_file = options.out;
-        var meta_file = options.meta;
+        var meta_file = options.meta_file;
+        var meta_dir = options.meta_dir;
 
+        var meta_manager = new meta_factory( process.cwd(), meta_dir );
         var compressor_options = this.options(
             {preserve:null}
         );
-        delete compressor_options.in_file
-        delete compressor_options.out
-        delete compressor_options.meta
-        delete compressor_options.preserved_html_comments
+        delete compressor_options.in_file;
+        delete compressor_options.out;
+        delete compressor_options.meta_file;
+        delete compressor_options.meta_dir;
+        delete compressor_options.preserved_html_comments;
 
         grunt.verbose.writeflags(options, 'Options'); // debug call
 
@@ -37,8 +39,8 @@ module.exports = function(grunt) {
             }
 
 
-            var current_grunt_task = this.nameArgs
-            var current_grunt_opt = this.options()
+            var current_grunt_task = this.nameArgs;
+            var current_grunt_opt = this.options();
 
             htmlcompressor(compressor_options, in_file,
                 function(err, output, code) {
@@ -56,7 +58,7 @@ module.exports = function(grunt) {
                         }
                         entry.load_dependencies([in_file, __filename])
 
-                        entry.require_task(current_grunt_task, current_grunt_opt)
+                        entry.require_task(current_grunt_task, current_grunt_opt);
                         entry.save(meta_file, function(err){
                             if (err) done(false);
                             else done();
