@@ -1,0 +1,23 @@
+{
+    "name": "phantomizer-htmlcompressor",
+    "version": "0.1.0",
+    "private": true,
+    "description": "HTML minification support for phantomizer",
+    "keywords": "",
+    "bugs": {
+        "url" : "http://github.com/maboiteaspam/phantomizer-htmlcompressor/issues",
+        "email" : "none@host.com"
+    },
+    "license" : "mit",
+    "directories.lib": "lib/",
+    "repository" :{
+        "type" : "git",
+        "url" : "http://github.com/maboiteaspam/phantomizer-htmlcompressor.git"
+    },
+    "dependencies": {
+        "grunt": "0.4.x"
+        ,"phantomizer-libutil": "http://github.com/maboiteaspam/phantomizer-libutil.git"
+    },
+    "devDependencies": {
+    }
+}
