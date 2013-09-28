@@ -57,7 +57,6 @@ module.exports = function(grunt) {
                             entry.load_dependencies([process.cwd()+"/Gruntfile.js"])
                         }
                         entry.load_dependencies([in_file, __filename])
-
                         entry.require_task(current_grunt_task, current_grunt_opt);
                         entry.save(meta_file, function(err){
                             if (err) done(false);
