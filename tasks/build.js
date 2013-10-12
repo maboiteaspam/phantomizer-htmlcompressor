@@ -86,7 +86,8 @@ module.exports = function(grunt) {
         var compressor_options = this.options(
             {
                 preserve:null,
-                output:in_dir
+                output:in_dir,
+                recursive:true
             }
         );
         delete compressor_options.in_dir;
