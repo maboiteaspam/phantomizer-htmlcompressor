@@ -25,14 +25,14 @@ module.exports = function(grunt) {
                 options:{
                     "in_file": in_dir+"/index.html"
                     ,"out": "<%= out_dir %>/index.html"
-                    ,"meta": "<%= meta_dir %>/index.html.meta"
+                    ,"meta": "<%= meta_dir %>/index.html"
                 }
             }
             ,keepcomments: {
                 options:{
                     "in_file": in_dir+"/index.html"
                     ,"out": "<%= out_dir %>/index.html"
-                    ,"meta": "<%= meta_dir %>/index.html.meta"
+                    ,"meta": "<%= meta_dir %>/index.html"
                     ,"preserved_html_comments": "(?si)<!--.+?-->"
                 }
             }
