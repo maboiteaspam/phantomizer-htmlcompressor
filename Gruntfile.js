@@ -80,7 +80,7 @@ module.exports = function(grunt) {
                 // commitMessage: 'release <%= version %>', //default: 'release <%= version %>'
                 //tagMessage: 'tagging version <%= version %>', //default: 'Version <%= version %>',
                 github: {
-                    repo: 'maboiteaspam/phantomizer', //put your user/repo here
+                    repo: 'maboiteaspam/phantomizer-htmlcompressor', //put your user/repo here
                     usernameVar: 'GITHUB_USERNAME', //ENVIRONMENT VARIABLE that contains Github username
                     passwordVar: 'GITHUB_PASSWORD' //ENVIRONMENT VARIABLE that contains Github password
                 }
