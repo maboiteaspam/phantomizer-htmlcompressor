@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+
+<html>
+<head>
+  <title>htmlcompressor.js</title>
+  <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+  <link rel="stylesheet" media="all" href="public/stylesheets/normalize.css" />
+  <link rel="stylesheet" media="all" href="docco.css" />
+</head>
+<body>
+  <div class="container">
+    <div class="page">
+
+      <div class="header">
+        
+          <h1>htmlcompressor.js</h1>
+        
+
+        
+          <div class="toc">
+            <h3>Table of Contents</h3>
+            <ol>
+              
+                
+                <li>
+                  <a class="source" href="htmlcompressor.html">
+                    htmlcompressor.js
+                  </a>
+                </li>
+              
+                
+                <li>
+                  <a class="source" href="build.html">
+                    build.js
+                  </a>
+                </li>
+              
+            </ol>
+          </div>
+        
+      </div>
+
+      
+        
+        
+        
+          <div class='highlight'><pre><span class="hljs-comment">/**
+ * This source was largely inspired by
+ *
+ * grunt-htmlcompressor
+ * https://github.com/jney/grunt-htmlcompressor
+ *
+ * Copyright (c) 2012 Jean-Sébastien Ney
+ * Licensed under the MIT license.
+ */</span>
+
+<span class="hljs-comment">/*global _:true, __dirname */</span>
+
+<span class="hljs-keyword">var</span> htmlcompressor = module.exports = (<span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">()</span>{</span></pre></div>
+        
+      
+        
+        <p>returns a compressor function</p>
+
+        
+          <div class='highlight'><pre>	<span class="hljs-keyword">var</span> compressor = <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">( options, srcFile, cb )</span>{</span>
+
+        <span class="hljs-keyword">var</span> grunt = <span class="hljs-built_in">require</span>(<span class="hljs-string">'grunt'</span>);
+
+        <span class="hljs-keyword">var</span> _ = grunt.util._;</pre></div>
+        
+      
+        
+        <p>options are promptly passed on the command line</p>
+
+        
+          <div class='highlight'><pre>		options = options || {
+            <span class="hljs-comment">/*
+             Global Options:
+             -?, /?, -h, --help            Displays this help screen
+             -t, --type &lt;html|xml&gt;         If not provided autodetects from file extension
+             -r, --recursive               Process files inside subdirectories
+             -c, --charset &lt;charset&gt;       Charset for reading files, UTF-8 by default
+             -m, --mask &lt;filemask&gt;         Filter input files inside directories by mask
+             -o, --output &lt;path&gt;           Filename or directory for compression results. If none provided outputs result to &lt;stdout&gt;
+             -a, --analyze                 Tries different settings and displays report. All settings except --js-compressor are ignored
+
+             XML Compression Options:
+             --preserve-comments           Preserve comments
+             --preserve-intertag-spaces    Preserve intertag spaces
+
+             HTML Compression Options:
+             --preserve-comments           Preserve comments
+             --preserve-multi-spaces       Preserve multiple spaces
+             --preserve-line-breaks        Preserve line breaks
+             --remove-intertag-spaces      Remove intertag spaces
+             --remove-quotes               Remove unneeded quotes
+             --simple-doctype              Change doctype to &lt;!DOCTYPE html&gt;
+             --remove-style-attr           Remove TYPE attribute from STYLE tags
+             --remove-link-attr            Remove TYPE attribute from LINK tags
+             --remove-script-attr          Remove TYPE and LANGUAGE from SCRIPT tags
+             --remove-form-attr            Remove METHOD="GET" from FORM tags
+             --remove-input-attr           Remove TYPE="TEXT" from INPUT tags
+             --simple-bool-attr            Remove values from boolean tag attributes
+             --remove-js-protocol          Remove "javascript:" from inline event handlers
+             --remove-http-protocol        Remove "http:" from tag attributes
+             --remove-https-protocol       Remove "https:" from tag attributes
+             --remove-surrounding-spaces &lt;min|max|all|custom_list&gt; Predefined or custom comma separated list of tags
+             --compress-js                 Enable inline JavaScript compression
+             --compress-css                Enable inline CSS compression using YUICompressor
+             --js-compressor &lt;yui|closure&gt; Switch inline JavaScript compressor between YUICompressor (default) and Closure Compiler
+
+             JavaScript Compression Options for YUI Compressor:
+             --nomunge                     Minify only, do not obfuscate
+             --preserve-semi               Preserve all semicolons
+             --disable-optimizations       Disable all micro optimizations
+             --line-break &lt;column num&gt;     Insert a line break after the specified column
+
+             JavaScript Compression Options for Google Closure Compiler:
+             --closure-opt-level &lt;simple|advanced|whitespace&gt; Sets level of optimization (simple by default)
+             --closure-externs &lt;file&gt;      Sets custom externs file, repeat for each file
+             --closure-custom-externs-only Disable default built-in externs
+
+             CSS Compression Options for YUI Compressor:
+             --line-break &lt;column num&gt;     Insert a line break after the specified column
+
+             Custom Block Preservation Options:
+             --preserve-php                Preserve &lt;?php ... ?&gt; tags
+             --preserve-server-script      Preserve &lt;% ... %&gt; tags
+             --preserve-ssi                Preserve &lt;!--# ... --&gt; tags
+             -p, --preserve &lt;path&gt;         Read regular expressions that define custom preservation rules from a file
+
+             Please note that if you enable CSS or JavaScript compression, additional
+             YUI Compressor or Google Closure Compiler jar files must be present
+             in the same directory as this jar.
+             */</span>
+        };
+        <span class="hljs-keyword">var</span> allowed_options = [
+            <span class="hljs-string">'type'</span>,
+            <span class="hljs-string">'recursive'</span>,
+            <span class="hljs-string">'charset'</span>,
+            <span class="hljs-string">'mask'</span>,
+            <span class="hljs-string">'output'</span>,
+            <span class="hljs-string">'analyze'</span>,
+            <span class="hljs-string">'preserveComments '</span>,
+            <span class="hljs-string">'intertagSpaces'</span>,
+            <span class="hljs-string">'preserveMultiSpaces'</span>,
+            <span class="hljs-string">'preserveLineBreaks'</span>,
+            <span class="hljs-string">'removeQuotes'</span>,
+            <span class="hljs-string">'simpleDoctype'</span>,
+            <span class="hljs-string">'removeStyleAttr'</span>,
+            <span class="hljs-string">'removeLinkAttr'</span>,
+            <span class="hljs-string">'removeScriptAttr'</span>,
+            <span class="hljs-string">'removeFormAttr'</span>,
+            <span class="hljs-string">'removeInputAttr'</span>,
+            <span class="hljs-string">'simpleBoolAttr'</span>,
+            <span class="hljs-string">'removeJsProtocol'</span>,
+            <span class="hljs-string">'removeHttpProtocol'</span>,
+            <span class="hljs-string">'removeHttpsProtocol'</span>,
+            <span class="hljs-string">'removeSurroundingSpaces'</span>,
+            <span class="hljs-string">'compressJs'</span>,
+            <span class="hljs-string">'compressCss'</span>,
+            <span class="hljs-string">'jsCompressor'</span>,
+            <span class="hljs-string">'nomunge'</span>,
+            <span class="hljs-string">'preserveSemi'</span>,
+            <span class="hljs-string">'disableOptimizations'</span>,
+            <span class="hljs-string">'lineBreak'</span>,
+            <span class="hljs-string">'preservePhp'</span>,
+            <span class="hljs-string">'preserveServerScript'</span>,
+            <span class="hljs-string">'preserveSsi'</span>,
+            <span class="hljs-string">'preserve'</span>
+        ];</pre></div>
+        
+      
+        
+        <p>location of the enbedded htmlcompressor binary</p>
+
+        
+          <div class='highlight'><pre>		<span class="hljs-keyword">var</span> jar = __dirname + <span class="hljs-string">'/../ext/htmlcompressor-1.5.3.jar'</span>;</pre></div>
+        
+      
+        
+        <p>remove unexpected options to htmlcompressor</p>
+
+        
+          <div class='highlight'><pre>        <span class="hljs-keyword">for</span>( <span class="hljs-keyword">var</span> n <span class="hljs-keyword">in</span> options ){
+            <span class="hljs-keyword">if</span>( allowed_options.indexOf(n) == -<span class="hljs-number">1</span> ){
+                <span class="hljs-keyword">delete</span> options[n];
+            }
+        }</pre></div>
+        
+      
+        
+        <p>join into a string the required parameters to invoke the external htmlcompressor</p>
+
+        
+          <div class='highlight'><pre>		<span class="hljs-keyword">var</span> args = _.flatten([<span class="hljs-string">'-jar'</span>, jar, _.map(options, toParameter), srcFile]);</pre></div>
+        
+      
+        
+        <p>invoke now the external jar file thru java</p>
+
+        
+          <div class='highlight'><pre>		grunt.util.spawn({
+		  cmd: <span class="hljs-string">'java'</span>,
+		  args: args
+		}, cb);
+	};
+
+    <span class="hljs-keyword">return</span> compressor;</pre></div>
+        
+      
+        
+        <p>Convert a pair of key/value to an array
+if the value is <code>true</code> only the key is kept</p>
+<p>Example:</p>
+<p>  toParameter(‘lineBreak’, 2)
+  // =&gt; [‘—line-break’, 2]</p>
+<p>  toParameter(‘preserveComments’, true)
+  // =&gt; [‘—preserve-comments’]</p>
+
+        
+          <div class='highlight'><pre>    <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">toParameter</span><span class="hljs-params">(val, key)</span> {</span>
+        <span class="hljs-keyword">var</span> str = <span class="hljs-string">'--'</span> + key.replace(<span class="hljs-regexp">/([A-Z])/g</span>, <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(a)</span> {</span>
+            <span class="hljs-keyword">return</span> <span class="hljs-string">'-'</span> +  a.toLowerCase();
+        });
+
+        <span class="hljs-keyword">return</span> (val === <span class="hljs-literal">true</span>) ? [str] : [str, val];
+    }
+
+})();</pre></div>
+        
+      
+      <div class="fleur">h</div>
+    </div>
+  </div>
+</body>
+</html>
