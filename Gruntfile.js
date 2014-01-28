@@ -91,6 +91,7 @@ module.exports = function(grunt) {
     grunt.loadNpmTasks('grunt-gh-pages');
     grunt.loadNpmTasks('grunt-release');
     grunt.registerTask('cleanup-grunt-temp', [],function(){
+        var wrench = require('wrench');
         wrench.rmdirSyncRecursive(__dirname + '/.grunt', !true);
     });
 
