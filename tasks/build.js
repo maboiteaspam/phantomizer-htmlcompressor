@@ -92,11 +92,16 @@ module.exports = function(grunt) {
         var os = require('os');
         var htmlcompressor = require("../lib/htmlcompressor");
 
-        var options = this.options();
+        var options = this.options({
+            preserved_html_comments:''
+            /*
+            + Any other options listed in lib/htmlcompressor
+             */
+        });
         var in_dir = options.in_dir;
 
 
-//  init compressor options for cli call
+//  init options passed to compressor binary
         var compressor_options = this.options({
                 preserve:null,
                 output:in_dir,
@@ -120,6 +125,7 @@ module.exports = function(grunt) {
         htmlcompressor(compressor_options, in_dir,
             function(err, output, code) {
                 if (err) {
+                    grunt.log.error(code);
                     grunt.log.error(err);
                     grunt.log.warn(output);
                     grunt.fail.warn('htmlcompressor failed to compress html.');
