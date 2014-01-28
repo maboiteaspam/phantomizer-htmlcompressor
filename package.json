@@ -14,6 +14,9 @@
         "type": "git",
         "url": "http://github.com/maboiteaspam/phantomizer-htmlcompressor.git"
     },
+    "scripts":{
+        "prepublish":"install.js"
+    },
     "dependencies": {
         "grunt": "0.4.x",
         "phantomizer-libutil": "git://github.com/maboiteaspam/phantomizer-libutil.git"
