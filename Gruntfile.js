@@ -124,7 +124,6 @@ module.exports = function(grunt) {
             README += "";
             fs.writeFileSync(__dirname + "/README.md",README);
         }
-
     });
 
     // to generate and publish the docco style documentation
