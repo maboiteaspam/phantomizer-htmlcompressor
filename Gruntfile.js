@@ -15,6 +15,10 @@ module.exports = function(grunt) {
         // define some options for testing purpose
         ,"out_dir":out_dir
         ,"meta_dir":meta_dir
+        ,"src_doc":[
+            'lib/htmlcompressor.js',
+            'tasks/build.js'
+        ]
 
         //-
         ,'phantomizer-htmlcompressor': {
@@ -41,14 +45,17 @@ module.exports = function(grunt) {
         // end of testing options
         docco: {
             debug: {
-                src: [
-                    'lib/htmlcompressor.js',
-                    'tasks/build.js'
-                ],
+                src: "<%= src_doc %>",
                 options: {
                     layout:'linear',
                     output: 'documentation/'
                 }
+            }
+        },
+        "update-README":{
+            options: {
+                src: "<%= src_doc %>",
+                base_doc_url: "http://maboiteaspam.github.io/phantomizer-htmlcompressor/"
             }
         },
         'gh-pages': {
@@ -95,11 +102,35 @@ module.exports = function(grunt) {
         wrench.rmdirSyncRecursive(__dirname + '/.grunt', !true);
         wrench.rmdirSyncRecursive(__dirname + '/documentation', !true);
     });
+    grunt.registerTask('update-README', [], function(){
+        var path = require('path');
+        var fs = require('fs');
+        var README = fs.readFileSync(__dirname + "/README.md","utf-8");
+        var options = this.options({
+            src:[],
+            base_doc_url:""
+        })
+
+        if( !README.match(/#\s+Documentation\s+Index/) ){
+            README += "\n\n";
+            README += "# Documentation Index\n\n";
+            README += ""+options.base_doc_url+"\n";
+            for( var n in options["src"] ){
+                var file = options["src"][n];
+                file = path.basename(file)
+                file = file.replace(/([.]js|css)/, "")
+                README += ""+options.base_doc_url+"documentation/"+file+".html\n";
+            }
+            README += "";
+            fs.writeFileSync(__dirname + "/README.md",README);
+        }
+
+    });
 
     // to generate and publish the docco style documentation
     // execute this
     // grunt
-    grunt.registerTask('default', ['docco','gh-pages', 'cleanup-grunt-temp']);
+    grunt.registerTask('default', ['docco','gh-pages', 'cleanup-grunt-temp', 'update-README']);
 
     // to release the project in a new version
     // use one of those commands
