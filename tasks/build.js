@@ -7,7 +7,7 @@ module.exports = function(grunt) {
     var ph_libutil = require("phantomizer-libutil");
 
 
-    // Task to compress one html file using phantomizer c&c
+    // <h1>Task to compress one html file using phantomizer c&c</h1>
     grunt.registerMultiTask("phantomizer-htmlcompressor", "Compress html file", function () {
 
         //  init task options
@@ -103,6 +103,7 @@ module.exports = function(grunt) {
                                 //  follow up the problematic issue we found
                                 done(false);
                             }else{
+                                // success !
                                 done();
                             }
                         })
@@ -116,6 +117,7 @@ module.exports = function(grunt) {
     });
 
     // Task to compress a directory of html files
+    // ##########
     grunt.registerMultiTask("phantomizer-dir-htmlcompressor", "Compress a directory of html files", function () {
 
         //  init task options
@@ -166,6 +168,7 @@ module.exports = function(grunt) {
                     //  follow up the problematic issue we found
                     done(false);
                 } else {
+                    // success !
                     grunt.log.ok("htmlcompressor done");
                     done();
                 }
