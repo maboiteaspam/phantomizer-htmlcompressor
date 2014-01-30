@@ -48,26 +48,61 @@
 
 module.exports = <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(grunt)</span> {</span>
 
+    <span class="hljs-keyword">var</span> os = <span class="hljs-built_in">require</span>(<span class="hljs-string">'os'</span>);
+    <span class="hljs-keyword">var</span> htmlcompressor = <span class="hljs-built_in">require</span>(<span class="hljs-string">"../lib/htmlcompressor"</span>);
+    <span class="hljs-keyword">var</span> ph_libutil = <span class="hljs-built_in">require</span>(<span class="hljs-string">"phantomizer-libutil"</span>);</pre></div>
+        
+      
+        
+        <p>Task to compress one html file using phantomizer c&amp;c</p>
 
-    grunt.registerMultiTask(<span class="hljs-string">"phantomizer-htmlcompressor"</span>, <span class="hljs-string">"Compress html file"</span>, <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">()</span> {</span>
-
-        <span class="hljs-keyword">var</span> ph_libutil = <span class="hljs-built_in">require</span>(<span class="hljs-string">"phantomizer-libutil"</span>);
-        <span class="hljs-keyword">var</span> os = <span class="hljs-built_in">require</span>(<span class="hljs-string">'os'</span>);
-        <span class="hljs-keyword">var</span> htmlcompressor = <span class="hljs-built_in">require</span>(<span class="hljs-string">"../lib/htmlcompressor"</span>);
-
-        <span class="hljs-keyword">var</span> meta_factory = ph_libutil.meta;</pre></div>
+        
+          <div class='highlight'><pre>    grunt.registerMultiTask(<span class="hljs-string">"phantomizer-htmlcompressor"</span>, <span class="hljs-string">"Compress html file"</span>, <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">()</span> {</span></pre></div>
         
       
         
         <p> init task options</p>
 
         
-          <div class='highlight'><pre>        <span class="hljs-keyword">var</span> options = <span class="hljs-keyword">this</span>.options({
-            in_file:<span class="hljs-string">''</span>,
-            out:<span class="hljs-string">''</span>,
-            meta_file:<span class="hljs-string">''</span>,
-            meta_dir:<span class="hljs-string">''</span>,
-            preserve:<span class="hljs-literal">null</span>
+          <div class='highlight'><pre>        <span class="hljs-keyword">var</span> options = <span class="hljs-keyword">this</span>.options({</pre></div>
+        
+      
+        
+        <p>the file to compress</p>
+
+        
+          <div class='highlight'><pre>            in_file:<span class="hljs-string">''</span>,</pre></div>
+        
+      
+        
+        <p>the file to write</p>
+
+        
+          <div class='highlight'><pre>            out:<span class="hljs-string">''</span>,</pre></div>
+        
+      
+        
+        <p>the relative file path to save meta</p>
+
+        
+          <div class='highlight'><pre>            meta_file:<span class="hljs-string">''</span>,</pre></div>
+        
+      
+        
+        <p>the base directory where the meta files are saved</p>
+
+        
+          <div class='highlight'><pre>            meta_dir:<span class="hljs-string">''</span>,</pre></div>
+        
+      
+        
+        <p>the contents of preserve regexp to give to htmlcompressor</p>
+
+        
+          <div class='highlight'><pre>            preserved_html_comments:<span class="hljs-literal">null</span>
+            <span class="hljs-comment">/*
+                + Any other options listed in lib/htmlcompressor
+             */</span>
         });
         <span class="hljs-keyword">var</span> in_file = options.in_file;
         <span class="hljs-keyword">var</span> out_file = options.out;
@@ -86,9 +121,15 @@ module.exports = <span class="hljs-function"><span class="hljs-keyword">function
             out:<span class="hljs-string">''</span>,
             meta_file:<span class="hljs-string">''</span>,
             meta_dir:<span class="hljs-string">''</span>,
-            preserve:<span class="hljs-literal">null</span>
-        });
-        <span class="hljs-keyword">delete</span> compressor_options.in_file;
+            preserved_html_comments:<span class="hljs-literal">null</span>
+        });</pre></div>
+        
+      
+        
+        <p>clean it from undesired options that could pollute the command line call</p>
+
+        
+          <div class='highlight'><pre>        <span class="hljs-keyword">delete</span> compressor_options.in_file;
         <span class="hljs-keyword">delete</span> compressor_options.out;
         <span class="hljs-keyword">delete</span> compressor_options.meta_file;
         <span class="hljs-keyword">delete</span> compressor_options.meta_dir;
@@ -96,117 +137,256 @@ module.exports = <span class="hljs-function"><span class="hljs-keyword">function
         
       
         
-        <p> look up for already build file</p>
+        <p>create a new manager to check and save build status</p>
 
         
-          <div class='highlight'><pre>        <span class="hljs-keyword">var</span> meta_manager = <span class="hljs-keyword">new</span> meta_factory( process.cwd(), meta_dir );
-        <span class="hljs-keyword">var</span> current_grunt_task  = <span class="hljs-keyword">this</span>.nameArgs;
-
-        <span class="hljs-keyword">if</span>( meta_manager.is_fresh(meta_file, current_grunt_task) == <span class="hljs-literal">false</span> ){
-
-            <span class="hljs-keyword">var</span> done = <span class="hljs-keyword">this</span>.async();</pre></div>
+          <div class='highlight'><pre>        <span class="hljs-keyword">var</span> meta_factory = ph_libutil.meta;
+        <span class="hljs-keyword">var</span> meta_manager = <span class="hljs-keyword">new</span> meta_factory( process.cwd(), meta_dir );</pre></div>
         
       
         
-        <p> transforms passed string pattern into a file</p>
+        <p>how was called this task : htmlcompressor:some_param</p>
+
+        
+          <div class='highlight'><pre>        <span class="hljs-keyword">var</span> current_grunt_task  = <span class="hljs-keyword">this</span>.nameArgs;</pre></div>
+        
+      
+        
+        <p>save current options status to regenerate</p>
+
+        
+          <div class='highlight'><pre>        <span class="hljs-keyword">var</span> current_grunt_opt = <span class="hljs-keyword">this</span>.options();</pre></div>
+        
+      
+        
+        <p>if the build file does not exists or is out of date</p>
+
+        
+          <div class='highlight'><pre>        <span class="hljs-keyword">if</span>( meta_manager.is_fresh(meta_file, current_grunt_task) == <span class="hljs-literal">false</span> ){</pre></div>
+        
+      
+        
+        <p>then generate the output file again, or for the first time</p>
+
+        
+          <div class='highlight'><pre>            <span class="hljs-keyword">var</span> done = <span class="hljs-keyword">this</span>.async();</pre></div>
+        
+      
+        
+        <p>transforms preserved_html_comments regexp string into a file for htmlcompressor binary</p>
 
         
           <div class='highlight'><pre>            <span class="hljs-keyword">if</span>( options.preserved_html_comments != <span class="hljs-string">""</span> ){
                 compressor_options.preserve = os.tmpdir()+<span class="hljs-string">"/preserved_html_comments"</span>;
                 grunt.file.write(compressor_options.preserve, options.preserved_html_comments);
-            }
+            }</pre></div>
+        
+      
+        
+        <p>invoke htmlcompressor binary, a jar file</p>
 
-
-            <span class="hljs-keyword">var</span> current_grunt_opt = <span class="hljs-keyword">this</span>.options();
-            console.log(compressor_options)
-
-            htmlcompressor(compressor_options, in_file,
+        
+          <div class='highlight'><pre>            htmlcompressor(compressor_options, in_file,
                 <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(err, output, code)</span> {</span>
-                    <span class="hljs-keyword">if</span> (err) {
+                    <span class="hljs-keyword">if</span> (err) {</pre></div>
+        
+      
+        
+        <p>log error</p>
+
+        
+          <div class='highlight'><pre>                        grunt.log.error(code);
                         grunt.log.error(err);
                         grunt.log.warn(output);
-                        grunt.fail.warn(<span class="hljs-string">'htmlcompressor failed to compress html.'</span>);
-                        done(<span class="hljs-literal">false</span>);
-                    } <span class="hljs-keyword">else</span> {
-                        grunt.file.write(out_file, output.stdout);
-                        grunt.log.ok(<span class="hljs-string">'File "'</span> + out_file + <span class="hljs-string">'" created.'</span>);
+                        grunt.fail.warn(<span class="hljs-string">'htmlcompressor failed to compress html.'</span>);</pre></div>
+        
+      
+        
+        <p> follow up the problematic issue we found</p>
 
-                        <span class="hljs-keyword">var</span> entry = meta_manager.load(meta_file);
-                        <span class="hljs-keyword">if</span> ( grunt.file.exists(process.cwd()+<span class="hljs-string">"/Gruntfile.js"</span>)) {
+        
+          <div class='highlight'><pre>                        done(<span class="hljs-literal">false</span>);
+                    } <span class="hljs-keyword">else</span> {</pre></div>
+        
+      
+        
+        <p>saves output file</p>
+
+        
+          <div class='highlight'><pre>                        grunt.file.write(out_file, output.stdout);
+                        grunt.log.ok(<span class="hljs-string">'File "'</span> + out_file + <span class="hljs-string">'" created.'</span>);</pre></div>
+        
+      
+        
+        <p>load/create a meta entry</p>
+
+        
+          <div class='highlight'><pre>                        <span class="hljs-keyword">var</span> entry = meta_manager.load(meta_file);</pre></div>
+        
+      
+        
+        <p>add User land Grunt file to the list of dependency</p>
+
+        
+          <div class='highlight'><pre>                        <span class="hljs-keyword">if</span> ( grunt.file.exists(process.cwd()+<span class="hljs-string">"/Gruntfile.js"</span>)) {
                             entry.load_dependencies([process.cwd()+<span class="hljs-string">"/Gruntfile.js"</span>])
-                        }
-                        entry.load_dependencies([in_file, __filename])
-                        entry.require_task(current_grunt_task, current_grunt_opt);
-                        entry.save(meta_file, <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(err)</span>{</span>
-                            <span class="hljs-keyword">if</span> (err) done(<span class="hljs-literal">false</span>);
-                            <span class="hljs-keyword">else</span> done();
+                        }</pre></div>
+        
+      
+        
+        <p>add in_file as a dependency</p>
+
+        
+          <div class='highlight'><pre>                        entry.load_dependencies([in_file, __filename]);</pre></div>
+        
+      
+        
+        <p>save that task step to the meta in order to regenerate output file</p>
+
+        
+          <div class='highlight'><pre>                        entry.require_task(current_grunt_task, current_grunt_opt);</pre></div>
+        
+      
+        
+        <p>save the meta</p>
+
+        
+          <div class='highlight'><pre>                        entry.save(meta_file, <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(err)</span>{</span>
+                            <span class="hljs-keyword">if</span> (err){</pre></div>
+        
+      
+        
+        <p>log error</p>
+
+        
+          <div class='highlight'><pre>                                grunt.log.error(err);</pre></div>
+        
+      
+        
+        <p> follow up the problematic issue we found</p>
+
+        
+          <div class='highlight'><pre>                                done(<span class="hljs-literal">false</span>);
+                            }<span class="hljs-keyword">else</span>{
+                                done();
+                            }
                         })
                     }
                 });
 
         }<span class="hljs-keyword">else</span>{
             grunt.log.ok(<span class="hljs-string">"the build is fresh"</span>)
+            grunt.verbose.or.write(<span class="hljs-string">"\t"</span>+out)
         }
-    });
+    });</pre></div>
+        
+      
+        
+        <p>Task to compress a directory of html files</p>
 
-    grunt.registerMultiTask(<span class="hljs-string">"phantomizer-dir-htmlcompressor"</span>, <span class="hljs-string">"Compress html file"</span>, <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">()</span> {</span>
+        
+          <div class='highlight'><pre>    grunt.registerMultiTask(<span class="hljs-string">"phantomizer-dir-htmlcompressor"</span>, <span class="hljs-string">"Compress a directory of html files"</span>, <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">()</span> {</span></pre></div>
+        
+      
+        
+        <p> init task options</p>
 
-        <span class="hljs-keyword">var</span> os = <span class="hljs-built_in">require</span>(<span class="hljs-string">'os'</span>);
-        <span class="hljs-keyword">var</span> htmlcompressor = <span class="hljs-built_in">require</span>(<span class="hljs-string">"../lib/htmlcompressor"</span>);
+        
+          <div class='highlight'><pre>        <span class="hljs-keyword">var</span> options = <span class="hljs-keyword">this</span>.options({</pre></div>
+        
+      
+        
+        <p>the directory containing source files</p>
 
-        <span class="hljs-keyword">var</span> options = <span class="hljs-keyword">this</span>.options({
-            preserved_html_comments:<span class="hljs-string">''</span>
+        
+          <div class='highlight'><pre>            in_dir:<span class="hljs-string">''</span>,</pre></div>
+        
+      
+        
+        <p>the contents of preserve regexp to give to htmlcompressor</p>
+
+        
+          <div class='highlight'><pre>            preserved_html_comments:<span class="hljs-string">''</span>
             <span class="hljs-comment">/*
-            + Any other options listed in lib/htmlcompressor
+                + Any other options listed in lib/htmlcompressor
              */</span>
         });
         <span class="hljs-keyword">var</span> in_dir = options.in_dir;</pre></div>
         
       
         
-        <p> init options passed to compressor binary</p>
+        <p> init compressor options for cli call</p>
 
         
           <div class='highlight'><pre>        <span class="hljs-keyword">var</span> compressor_options = <span class="hljs-keyword">this</span>.options({
                 preserve:<span class="hljs-literal">null</span>,
                 output:in_dir,
                 recursive:<span class="hljs-literal">true</span>
-        });
-        <span class="hljs-keyword">delete</span> compressor_options.in_dir;
-        <span class="hljs-keyword">delete</span> compressor_options.meta_dir;
-        <span class="hljs-keyword">delete</span> compressor_options.preserved_html_comments;
-
-        grunt.verbose.writeflags(options, <span class="hljs-string">'Options'</span>); <span class="hljs-comment">// debug call</span></pre></div>
+        });</pre></div>
         
       
         
-        <p> transforms passed string pattern into a file</p>
+        <p>clean it from undesired options that could pollute the command line call</p>
+
+        
+          <div class='highlight'><pre>        <span class="hljs-keyword">delete</span> compressor_options.in_dir;
+        <span class="hljs-keyword">delete</span> compressor_options.meta_dir;
+        <span class="hljs-keyword">delete</span> compressor_options.preserved_html_comments;</pre></div>
+        
+      
+        
+        <p>debug call</p>
+
+        
+          <div class='highlight'><pre>        grunt.verbose.writeflags(options, <span class="hljs-string">'Options'</span>);</pre></div>
+        
+      
+        
+        <p>transforms preserved_html_comments regexp string into a file for htmlcompressor binary</p>
 
         
           <div class='highlight'><pre>        <span class="hljs-keyword">if</span>( options.preserved_html_comments != <span class="hljs-string">""</span> ){
             compressor_options.preserve = os.tmpdir()+<span class="hljs-string">"/preserved_html_comments"</span>;
             grunt.file.write(compressor_options.preserve, options.preserved_html_comments);
-        }
+        }</pre></div>
+        
+      
+        
+        <p>it is an async task</p>
 
-        <span class="hljs-keyword">var</span> done = <span class="hljs-keyword">this</span>.async();
+        
+          <div class='highlight'><pre>        <span class="hljs-keyword">var</span> done = <span class="hljs-keyword">this</span>.async();</pre></div>
+        
+      
+        
+        <p>invoke htmlcompressor binary, a jar file</p>
 
-
-        htmlcompressor(compressor_options, in_dir,
+        
+          <div class='highlight'><pre>        htmlcompressor(compressor_options, in_dir,
             <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(err, output, code)</span> {</span>
-                <span class="hljs-keyword">if</span> (err) {
-                    grunt.log.error(code);
+                <span class="hljs-keyword">if</span> (err) {</pre></div>
+        
+      
+        
+        <p>log error</p>
+
+        
+          <div class='highlight'><pre>                    grunt.log.error(code);
                     grunt.log.error(err);
                     grunt.log.warn(output);
-                    grunt.fail.warn(<span class="hljs-string">'htmlcompressor failed to compress html.'</span>);
-                    done(<span class="hljs-literal">false</span>);
+                    grunt.fail.warn(<span class="hljs-string">'htmlcompressor failed to compress html.'</span>);</pre></div>
+        
+      
+        
+        <p> follow up the problematic issue we found</p>
+
+        
+          <div class='highlight'><pre>                    done(<span class="hljs-literal">false</span>);
                 } <span class="hljs-keyword">else</span> {
                     grunt.log.ok(<span class="hljs-string">"htmlcompressor done"</span>);
                     done();
                 }
             });
-
-
-
     });
 };</pre></div>
         
