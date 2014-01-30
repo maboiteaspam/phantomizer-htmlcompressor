@@ -54,7 +54,7 @@ module.exports = <span class="hljs-function"><span class="hljs-keyword">function
         
       
         
-        <p>Task to compress one html file using phantomizer c&amp;c</p>
+        <h1>Task to compress one html file using phantomizer c&amp;c</h1>
 
         
           <div class='highlight'><pre>    grunt.registerMultiTask(<span class="hljs-string">"phantomizer-htmlcompressor"</span>, <span class="hljs-string">"Compress html file"</span>, <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">()</span> {</span></pre></div>
@@ -267,8 +267,14 @@ module.exports = <span class="hljs-function"><span class="hljs-keyword">function
 
         
           <div class='highlight'><pre>                                done(<span class="hljs-literal">false</span>);
-                            }<span class="hljs-keyword">else</span>{
-                                done();
+                            }<span class="hljs-keyword">else</span>{</pre></div>
+        
+      
+        
+        <p>success !</p>
+
+        
+          <div class='highlight'><pre>                                done();
                             }
                         })
                     }
@@ -283,6 +289,7 @@ module.exports = <span class="hljs-function"><span class="hljs-keyword">function
       
         
         <p>Task to compress a directory of html files</p>
+<h6 id="-">#</h6>
 
         
           <div class='highlight'><pre>    grunt.registerMultiTask(<span class="hljs-string">"phantomizer-dir-htmlcompressor"</span>, <span class="hljs-string">"Compress a directory of html files"</span>, <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">()</span> {</span></pre></div>
@@ -382,8 +389,14 @@ module.exports = <span class="hljs-function"><span class="hljs-keyword">function
 
         
           <div class='highlight'><pre>                    done(<span class="hljs-literal">false</span>);
-                } <span class="hljs-keyword">else</span> {
-                    grunt.log.ok(<span class="hljs-string">"htmlcompressor done"</span>);
+                } <span class="hljs-keyword">else</span> {</pre></div>
+        
+      
+        
+        <p>success !</p>
+
+        
+          <div class='highlight'><pre>                    grunt.log.ok(<span class="hljs-string">"htmlcompressor done"</span>);
                     done();
                 }
             });
