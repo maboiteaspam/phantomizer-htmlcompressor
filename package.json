@@ -15,7 +15,7 @@
     "url": "http://github.com/maboiteaspam/phantomizer-htmlcompressor.git"
   },
   "scripts": {
-    "prepublish": "install.js"
+    "prepublish": "node install.js"
   },
   "dependencies": {
     "grunt": "0.4.x",
