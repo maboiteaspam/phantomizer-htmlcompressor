@@ -114,12 +114,12 @@ module.exports = function(grunt) {
         if( !README.match(/#\s+Documentation\s+Index/) ){
             README += "\n\n";
             README += "# Documentation Index\n\n";
-            README += ""+options.base_doc_url+"\n";
+            README += ""+options.base_doc_url+"\n\n";
             for( var n in options["src"] ){
                 var file = options["src"][n];
                 file = path.basename(file)
                 file = file.replace(/([.]js|css)/, "")
-                README += ""+options.base_doc_url+"documentation/"+file+".html\n";
+                README += ""+options.base_doc_url+"documentation/"+file+".html\n\n";
             }
             README += "";
             fs.writeFileSync(__dirname + "/README.md",README);
