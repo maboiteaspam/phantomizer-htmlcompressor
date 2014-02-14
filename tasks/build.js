@@ -19,8 +19,6 @@ module.exports = function(grunt) {
             out:'',
             // the relative file path to save meta
             meta_file:'',
-            // the base directory where the meta files are saved
-            meta_dir:'',
             // the contents of preserve regexp to give to htmlcompressor
             preserved_html_comments:null
             /*
@@ -30,7 +28,6 @@ module.exports = function(grunt) {
         var in_file = options.in_file;
         var out_file = options.out;
         var meta_file = options.meta_file;
-        var meta_dir = options.meta_dir;
 
         grunt.verbose.writeflags(options, 'Options'); // debug call
 
@@ -39,19 +36,17 @@ module.exports = function(grunt) {
             in_file:'',
             out:'',
             meta_file:'',
-            meta_dir:'',
             preserved_html_comments:null
         });
         // clean it from undesired options that could pollute the command line call
         delete compressor_options.in_file;
         delete compressor_options.out;
         delete compressor_options.meta_file;
-        delete compressor_options.meta_dir;
         delete compressor_options.preserved_html_comments;
 
         // create a new manager to check and save build status
-        var meta_factory = ph_libutil.meta;
-        var meta_manager = new meta_factory( process.cwd(), meta_dir );
+      var phantomizer = ph_libutil.get("main");
+      var meta_manager = phantomizer.get_meta_manager();
 
         // how was called this task : htmlcompressor:some_param
         var current_grunt_task  = this.nameArgs;
@@ -142,7 +137,6 @@ module.exports = function(grunt) {
         });
         // clean it from undesired options that could pollute the command line call
         delete compressor_options.in_dir;
-        delete compressor_options.meta_dir;
         delete compressor_options.preserved_html_comments;
 
         // debug call
