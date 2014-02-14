@@ -1,44 +1,8 @@
 
 module.exports = function(grunt) {
 
-    var d = __dirname+"/vendors/phantomizer-htmlcompressor";
-
-    var in_dir = d+"/demo/in/";
-    var out_dir = d+"/demo/out/";
-    var meta_dir = d+"/demo/out/";
-
-
-
     grunt.initConfig({
-        pkg: grunt.file.readJSON('package.json')
-
-        // define some options for testing purpose
-        ,"out_dir":out_dir
-        ,"meta_dir":meta_dir
-
-        //-
-        ,'phantomizer-htmlcompressor': {
-            options: {
-                "compress-js":true,
-                "compress-css":true
-            }
-            ,test: {
-                options:{
-                    "in_file": in_dir+"/index.html"
-                    ,"out": "<%= out_dir %>/index.html"
-                    ,"meta": "<%= meta_dir %>/index.html"
-                }
-            }
-            ,keepcomments: {
-                options:{
-                    "in_file": in_dir+"/index.html"
-                    ,"out": "<%= out_dir %>/index.html"
-                    ,"meta": "<%= meta_dir %>/index.html"
-                    ,"preserved_html_comments": "(?si)<!--.+?-->"
-                }
-            }
-        },
-        // end of testing options
+        pkg: grunt.file.readJSON('package.json'),
         docco: {
             debug: {
                 src: [
@@ -60,25 +24,10 @@ module.exports = function(grunt) {
         },
         release: {
             options: {
-                // update the package json file version number or not
-                bump: true, //default: true
-                //file: 'component.json', //default: package.json
-                // it is actually git add command
-                add: false, //default: true
-                // it is actually git commit command
-                commit: false, //default: true
-                // git tag  command
-                // tag: false, //default: true
-                // git push  command
-                // push: false, //default: true
-                // pushTags: false, //default: true
-                npm: false, //default: true
-                // true will apply the version number as the tag
-                npmtag: true, //default: no tag
-                // folder: 'folder/to/publish/to/npm', //default project root
-                tagName: '<%= version %>', //default: '<%= version %>'
-                // commitMessage: 'release <%= version %>', //default: 'release <%= version %>'
-                //tagMessage: 'tagging version <%= version %>', //default: 'Version <%= version %>',
+              npm: false, //default: true
+              // true will apply the version number as the tag
+              npmtag: true, //default: no tag
+              tagName: '<%= version %>', //default: '<%= version %>'
                 github: {
                     repo: 'maboiteaspam/phantomizer-htmlcompressor', //put your user/repo here
                     usernameVar: 'GITHUB_USERNAME', //ENVIRONMENT VARIABLE that contains Github username
