@@ -45,7 +45,8 @@ module.exports = function(grunt) {
     delete compressor_options.preserved_html_comments;
 
     // create a new manager to check and save build status
-    var phantomizer = ph_libutil.get("main");
+    var Phantomizer = ph_libutil.Phantomizer;
+    var phantomizer = new Phantomizer(process.cwd(),grunt);
     var meta_manager = phantomizer.get_meta_manager();
 
     // how was called this task : htmlcompressor:some_param
